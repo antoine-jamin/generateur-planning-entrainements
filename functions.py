@@ -165,7 +165,6 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
             d = date(1, 1, 1)
             datetime1 = datetime.combine(d, max_heure_fin)
             datetime2 = datetime.combine(d, min_heure_deb)
-            c_time = datetime.combine(d, time(0, 5))
             time_elapsed = datetime1 - datetime2
             nb_row = time_elapsed.seconds / (5 * 60)
             tab = [tab]
@@ -208,7 +207,7 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
                         tab_style.append(('BOX', (i, int(id_row) + 1), (i, int(id_row) + delta_time), 2, colors.black))
             nrows = len(tab)
             rowHeights = nrows * [2]
-            rowHeights[0] = 12
+            rowHeights[0] = 11
             if all_days:
                 t = Table(tab, rowHeights=rowHeights, colWidths='*', hAlign='CENTER')
             else:
