@@ -108,10 +108,10 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
     t.setStyle(sty)
     elements = []
     if with_title:
-        sty = ParagraphStyle("style", fontSize=14, alignment=1, spaceAfter=5)
+        sty = ParagraphStyle("style", fontSize=13, alignment=1, spaceAfter=5)
         p = Paragraph(title, style=sty)
         elements.append(p)
-        sty = ParagraphStyle("style", fontSize=12, alignment=1, spaceAfter=3)
+        sty = ParagraphStyle("style", fontSize=11, alignment=1, spaceAfter=3)
         p = Paragraph(saison, style=sty)
         elements.append(p)
     sty = ParagraphStyle("style", fontSize=5, alignment=1, spaceAfter=8)
@@ -131,13 +131,13 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
     elements = []
     nb_pages = 1
     if with_title:
-        sty = ParagraphStyle("style", fontSize=14, alignment=1, spaceAfter=5)
+        sty = ParagraphStyle("style", fontSize=12, alignment=1, spaceAfter=5)
         p = Paragraph(title, style=sty)
         elements.append(p)
-        sty = ParagraphStyle("style", fontSize=12, alignment=1, spaceAfter=3)
+        sty = ParagraphStyle("style", fontSize=10, alignment=1, spaceAfter=3)
         p = Paragraph(saison, style=sty)
         elements.append(p)
-    sty = ParagraphStyle("style", fontSize=5, alignment=1, spaceAfter=8)
+    sty = ParagraphStyle("style", fontSize=5, alignment=1, spaceAfter=1)
     if with_srm:
         p = Paragraph("*Sous réserve de modifications (version du " + datetime.now().strftime("%d/%m/%Y") + ")",
                       style=sty)
@@ -145,7 +145,7 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
 
     for s, salle in enumerate(salles):
         if salle in dic_salle:
-            sty = ParagraphStyle("style", fontSize=12, leading=16, alignment=1, spaceAfter=7, spaceBefore=7,
+            sty = ParagraphStyle("style", fontSize=10, leading=16, alignment=1, spaceAfter=1, spaceBefore=6,
                                  backColor=bcouleurs_salles[s], textColor=fcouleurs_salles[s])
             p = Paragraph(salle, style=sty)
             elements.append(p)
