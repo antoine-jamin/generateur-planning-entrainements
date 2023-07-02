@@ -50,7 +50,7 @@ if __name__ == "__main__":
     frame_subtitle.pack(pady=5)
     Label(frame_subtitle, text="Sous-Titre :").pack(side=LEFT)
     sous_titre = Entry(frame_subtitle)
-    sous_titre.insert(END, "Saison 2022-2023")
+    sous_titre.insert(END, "Saison 2023-2024")
     sous_titre.pack(side=LEFT)
     frame_srdm = Frame(win)
     frame_srdm.pack(pady=5)
