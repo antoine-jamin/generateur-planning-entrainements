@@ -7,7 +7,7 @@ from datetime import datetime, time, date
 
 
 def getNomsSalles():
-    df = pd.read_csv("parameters/salles.csv")
+    df = pd.read_csv("/parameters/salles.csv")
     noms = []
     for d in df.iterrows():
         noms.append(d[1][0].upper())
@@ -15,7 +15,7 @@ def getNomsSalles():
 
 
 def getColorsBySalleName(nom_salle):
-    df = pd.read_csv("parameters/salles.csv")
+    df = pd.read_csv("/parameters/salles.csv")
     for d in df.iterrows():
         if d[1][0].upper() == nom_salle.upper():
             splitted_bcolor = d[1][1].split("/")
@@ -122,7 +122,7 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
     elements.append(t)
     # write the document to disk
 
-    doc = SimpleDocTemplate("outputs/planning_entrainements_parEquipe.pdf", title="Planning des entrainements",
+    doc = SimpleDocTemplate("/outputs/planning_entrainements_parEquipe.pdf", title="Planning des entrainements",
                             pagesize=A4,
                             rightMargin=5, leftMargin=5, topMargin=0, bottomMargin=0)
     doc.build(elements)
@@ -215,7 +215,7 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
             sty = TableStyle(tab_style)
             t.setStyle(sty)
             elements.append(t)
-    doc = SimpleDocTemplate("outputs/planning_entrainements_parSalle.pdf", title="Planning des entrainements",
+    doc = SimpleDocTemplate("/outputs/planning_entrainements_parSalle.pdf", title="Planning des entrainements",
                             pagesize=A4,
                             rightMargin=10, leftMargin=10, topMargin=0, bottomMargin=0)
     doc.build(elements)
