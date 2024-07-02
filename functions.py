@@ -8,17 +8,18 @@ import os
 
 script_dir = os.path.dirname(__file__)
 
-def getNomsSalles():
+
+def get_noms_salles():
     print("TOTO", )
-    df = pd.read_csv(script_dir+"/parameters/salles.csv")
+    df = pd.read_csv(script_dir + "/parameters/salles.csv")
     noms = []
     for d in df.iterrows():
         noms.append(d[1][0].upper())
     return noms
 
 
-def getColorsBySalleName(nom_salle):
-    df = pd.read_csv(script_dir+"/parameters/salles.csv")
+def get_colors_by_salle_name(nom_salle):
+    df = pd.read_csv(script_dir + "/parameters/salles.csv")
     for d in df.iterrows():
         if d[1][0].upper() == nom_salle.upper():
             splitted_bcolor = d[1][1].split("/")
@@ -30,14 +31,14 @@ def getColorsBySalleName(nom_salle):
             return bcolor, fcolor
 
 
-def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainements, salles, sous_titre, title):
+def gen_planning_etr(input_file, with_title, with_srm, all_days, jours_entrainements, salles, sous_titre, title):
     saison = sous_titre
     canva = input_file
     df = pd.read_excel(canva)
     bcouleurs_salles = []
     fcouleurs_salles = []
     for salle in salles:
-        bcouleur, fcouleur = getColorsBySalleName(salle)
+        bcouleur, fcouleur = get_colors_by_salle_name(salle)
         bcouleurs_salles.append(bcouleur)
         fcouleurs_salles.append(fcouleur)
     dic_categorie = {}
@@ -51,21 +52,14 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
         # d[1][4] : catégorie
 
         # Scinder par catégorie
-        dic_temp = {}
-        dic_temp["salle"] = d[1][0].upper()
-        dic_temp["jour"] = d[1][1].upper()
-        dic_temp["heure_deb"] = d[1][2]
-        dic_temp["heure_fin"] = d[1][3]
+        dic_temp = {"salle": d[1][0].upper(), "jour": d[1][1].upper(), "heure_deb": d[1][2], "heure_fin": d[1][3]}
         for cat in d[1][4].split("/"):
             if cat.upper() in dic_categorie:
                 dic_categorie[cat.upper()].append(dic_temp)
             else:
                 dic_categorie[cat.upper()] = [dic_temp]
         # Scinder par salle/jour
-        dic_temp = {}
-        dic_temp["categorie"] = d[1][4].upper()
-        dic_temp["heure_fin"] = d[1][3]
-        dic_temp["heure_deb"] = d[1][2]
+        dic_temp = {"categorie": d[1][4].upper(), "heure_fin": d[1][3], "heure_deb": d[1][2]}
         if d[1][0].upper() in dic_salle:
             if d[1][1].upper() in dic_salle[d[1][0].upper()]:
                 dic_salle[d[1][0].upper()][d[1][1].upper()].append(dic_temp)
@@ -90,7 +84,7 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
         ('FONT', (0, 0), (0, -1), "Helvetica-Bold")]
     for i, equipe in enumerate(sorted(dic_categorie)):
         row = [equipe]
-        for j in jours_entrainements:
+        for _ in jours_entrainements:
             row.append("")
         ids_col = []
         stored_salles = []
@@ -103,9 +97,11 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
                 ids_col.append(jours_entrainements.index(creneau["jour"]) + 1)
                 stored_salles.append(creneau["salle"])
         tab.append(row)
-        for j, id in enumerate(ids_col):
-            tab_sty.append(('BACKGROUND', (id, i + 1), (id, i + 1), bcouleurs_salles[salles.index(stored_salles[j])]))
-            tab_sty.append(('TEXTCOLOR', (id, i + 1), (id, i + 1), fcouleurs_salles[salles.index(stored_salles[j])]))
+        for j, ident in enumerate(ids_col):
+            tab_sty.append(
+                ('BACKGROUND', (ident, i + 1), (ident, i + 1), bcouleurs_salles[salles.index(stored_salles[j])]))
+            tab_sty.append(
+                ('TEXTCOLOR', (ident, i + 1), (ident, i + 1), fcouleurs_salles[salles.index(stored_salles[j])]))
     t = Table(tab, colWidths='*')
     sty = TableStyle(tab_sty)
     t.setStyle(sty)
@@ -125,14 +121,14 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
     elements.append(t)
     # write the document to disk
 
-    doc = SimpleDocTemplate(script_dir+"/outputs/planning_entrainements_parEquipe.pdf", title="Planning des entrainements",
+    doc = SimpleDocTemplate(script_dir + "/outputs/planning_entrainements_parEquipe.pdf",
+                            title="Planning des entrainements",
                             pagesize=A4,
                             rightMargin=5, leftMargin=5, topMargin=0, bottomMargin=0)
     doc.build(elements)
 
     # Fichier par Salle
     elements = []
-    nb_pages = 1
     if with_title:
         sty = ParagraphStyle("style", fontSize=12, alignment=1, spaceAfter=5)
         p = Paragraph(title, style=sty)
@@ -174,10 +170,10 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
             for i in range(0, int(nb_row)):
                 tab_temp = []
                 if all_days:
-                    for jour in jours_entrainements:
+                    for _ in jours_entrainements:
                         tab_temp.append("")
                 else:
-                    for jour in dic_salle[salle]:
+                    for _ in dic_salle[salle]:
                         tab_temp.append("")
                 tab.append(tab_temp)
             tab_style = [
@@ -196,29 +192,26 @@ def genPlanningEtr(input_file, with_title, with_srm, all_days, jours_entrainemen
                         datetime3 = datetime.combine(d, creneau["heure_deb"])
                         time_elapsed = datetime3 - datetime2
                         id_row = time_elapsed.seconds / (5 * 60)
-                        str_to_print = creneau["categorie"] + "\n" + creneau["heure_deb"].strftime("%HH%M") + " - " + \
-                                       creneau[
-                                           "heure_fin"].strftime("%HH%M")
+                        str_to_print = (creneau["categorie"] + "\n" + creneau["heure_deb"].strftime("%HH%M") + " - " +
+                                        creneau["heure_fin"].strftime("%HH%M"))
                         tab[int(id_row) + 1][i] = str_to_print
                         datetime4 = datetime.combine(d, creneau["heure_fin"])
                         time_elapsed = datetime4 - datetime3
                         delta_time = int(time_elapsed.seconds / (5 * 60))
                         tab_style.append(('SPAN', (i, int(id_row) + 1), (i, int(id_row) + delta_time)))
-                        # tab_style.append(
-                        #    ('BACKGROUND', (i, int(id_row) + 1), (i, int(id_row) + delta_time), couleurs_creneaux[j % 2]))
-                        # tab_style.append(('GRID', (i, int(id_row) + 1), (i, int(id_row) + delta_time), 0.25, colors.black))
                         tab_style.append(('BOX', (i, int(id_row) + 1), (i, int(id_row) + delta_time), 2, colors.black))
             nrows = len(tab)
-            rowHeights = nrows * [2]
-            rowHeights[0] = 11
+            row_heights = nrows * [2]
+            row_heights[0] = 11
             if all_days:
-                t = Table(tab, rowHeights=rowHeights, colWidths='*', hAlign='CENTER')
+                t = Table(tab, rowHeights=row_heights, colWidths='*', hAlign='CENTER')
             else:
-                t = Table(tab, rowHeights=rowHeights, hAlign='CENTER')
+                t = Table(tab, rowHeights=row_heights, hAlign='CENTER')
             sty = TableStyle(tab_style)
             t.setStyle(sty)
             elements.append(t)
-    doc = SimpleDocTemplate(script_dir+"/outputs/planning_entrainements_parSalle.pdf", title="Planning des entrainements",
+    doc = SimpleDocTemplate(script_dir + "/outputs/planning_entrainements_parSalle.pdf",
+                            title="Planning des entrainements",
                             pagesize=A4,
                             rightMargin=10, leftMargin=10, topMargin=0, bottomMargin=0)
     doc.build(elements)

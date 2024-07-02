@@ -6,16 +6,17 @@ root_file = ""
 jours_entrainements = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
 
 
-def fileChoice():
+def file_choice_dialog():
     global root_file
     root = filedialog.askopenfile(initialdir="")
     root_file = root.name
 
 
-def generatePlannings():
+def generate_plannings():
     global root_file
-    if root_file.split('.')[-1]!="xlsx":
-        messagebox.showerror("ERROR -- Mauvais fichier canva", "Veuillez sélectionner le bon fichier Canva au format .xlsx")
+    if root_file.split('.')[-1] != "xlsx":
+        messagebox.showerror("ERROR -- Mauvais fichier canva",
+                             "Veuillez sélectionner le bon fichier Canva au format .xlsx")
     else:
         jours = []
         for j in cbJoursVals:
@@ -25,10 +26,11 @@ def generatePlannings():
         for s in cbSallesVals:
             if cbSallesVals[s].get():
                 salles.append(s)
-        f.genPlanningEtr(with_srm=varSRMGr.get(), with_title=vartitleSubGr.get(), input_file=root_file,
-                         all_days=varsevenDaysGr.get(), salles=salles, jours_entrainements=jours,
-                         sous_titre=sous_titre.get(), title=doc_titre.get())
+        f.gen_planning_etr(with_srm=varSRMGr.get(), with_title=vartitleSubGr.get(), input_file=root_file,
+                           all_days=varsevenDaysGr.get(), salles=salles, jours_entrainements=jours,
+                           sous_titre=sous_titre.get(), title=doc_titre.get())
         messagebox.showinfo('Plannings générés', "Planning générés dans le dossier outputs")
+
 
 if __name__ == "__main__":
     win = Tk()
@@ -38,7 +40,7 @@ if __name__ == "__main__":
     Label(frame_title, text="Générateur de planning d'entrainements", font=("", 20)).pack()
     frame_file = Frame(win)
     frame_file.pack(pady=5)
-    file_choice = Button(frame_file, text="Sélectionner le fichier Excel", command=fileChoice)
+    file_choice = Button(frame_file, text="Sélectionner le fichier Excel", command=file_choice_dialog)
     file_choice.pack()
     frame_doctitle = Frame(win)
     frame_doctitle.pack(pady=5)
@@ -82,7 +84,7 @@ if __name__ == "__main__":
     frame_salles.pack(pady=5)
     Label(frame_salles, text="Salles : ").pack(side=LEFT)
     cbSallesVals = {}
-    for noms in f.getNomsSalles():
+    for noms in f.get_noms_salles():
         cbSallesVals[noms] = BooleanVar()
         cb = Checkbutton(frame_salles, text=noms, variable=cbSallesVals[noms])
         cb.toggle()
@@ -98,5 +100,5 @@ if __name__ == "__main__":
         if i != len(jours_entrainements) - 1:
             cb.toggle()
         cb.pack(side=LEFT)
-    Button(win, text="Générer les plannings", command=generatePlannings).pack(pady=10)
+    Button(win, text="Générer les plannings", command=generate_plannings).pack(pady=10)
     win.mainloop()
