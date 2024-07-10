@@ -10,7 +10,6 @@ script_dir = os.path.dirname(__file__)
 
 
 def get_noms_salles():
-    print("TOTO", )
     df = pd.read_csv(script_dir + "/parameters/salles.csv")
     noms = []
     for d in df.iterrows():

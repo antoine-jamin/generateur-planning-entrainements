@@ -1,6 +1,7 @@
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, simpledialog
 from tkinter import *
 import functions as f
+import re
 
 root_file = ""
 jours_entrainements = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
@@ -12,11 +13,20 @@ def file_choice_dialog():
     root_file = root.name
 
 
+def gdoc_choice_dialog():
+    global root_file
+    id_gdoc = simpledialog.askstring(title="Saisir Id du Google Sheet",
+                                     prompt="Saisir Id du Google Sheet (dans l'url du document entre /d/ et /)",
+                                     initialvalue="1XyMkgfs5KrsjVBm3fDOPB2IxsCZbS5N7AG7HkzA29EM")
+    root_file = "https://docs.google.com/spreadsheets/export?id=" + id_gdoc + "&format=xlsx"
+
+
 def generate_plannings():
     global root_file
-    if root_file.split('.')[-1] != "xlsx":
+    if re.split('[.=]', root_file)[-1] != "xlsx":
         messagebox.showerror("ERROR -- Mauvais fichier canva",
-                             "Veuillez sélectionner le bon fichier Canva au format .xlsx")
+                             "Veuillez sélectionner le bon fichier Canva au format .xlsx"
+                             " ou via url google sheet")
     else:
         jours = []
         for j in cbJoursVals:
@@ -41,7 +51,9 @@ if __name__ == "__main__":
     frame_file = Frame(win)
     frame_file.pack(pady=5)
     file_choice = Button(frame_file, text="Sélectionner le fichier Excel", command=file_choice_dialog)
-    file_choice.pack()
+    file_choice.pack(side=LEFT)
+    gdoc_choice = Button(frame_file, text="Saisir Id Google Sheet", command=gdoc_choice_dialog)
+    gdoc_choice.pack(side=LEFT, padx=5)
     frame_doctitle = Frame(win)
     frame_doctitle.pack(pady=5)
     Label(frame_doctitle, text="Titre :").pack(side=LEFT)
